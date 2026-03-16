@@ -1,26 +1,413 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ─────────────────────────────────────────
+   SCROLLBAR
+───────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 3px;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+::-webkit-scrollbar-track {
+  background: #05050a;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+::-webkit-scrollbar-thumb {
+  background: #22223a;
+}
+
+::selection {
+  background: rgba(201, 168, 76, 0.12);
+  color: #ede9e0;
+}
+
+/* ─────────────────────────────────────────
+   BASE
+───────────────────────────────────────── */
+html,
+body {
+  min-height: 100%;
+  background: #05050a;
+  color: #ede9e0;
+  font-family: var(--font-garamond), serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* Noise grain — always on top of everything */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 200px;
+}
+
+/* ─────────────────────────────────────────
+   @layer components — Tailwind v3 custom classes
+───────────────────────────────────────── */
+@layer components {
+
+  /* Layout */
+  .section-label {
+    @apply text-center uppercase;
+    font-family: var(--font-cinzel), serif;
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    color: #2e2c38;
+    padding: 56px 0 20px;
+  }
+
+  .section-title {
+    @apply text-center;
+    font-family: var(--font-cinzel), serif;
+    font-size: clamp(13px, 2vw, 16px);
+    letter-spacing: 0.15em;
+    color: #8a8690;
+    margin-bottom: 40px;
+  }
+
+  .section-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #22223a, transparent);
+  }
+
+  /* Ambient gold horizontal line */
+  .ambline {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(201, 168, 76, 0.06), transparent);
+    pointer-events: none;
+  }
+
+  /* ── Idea card ── */
+  .idea-card {
+    background: #0a0a12;
+    border: 1px solid #22223a;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .idea-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .idea-card:hover::before {
+    opacity: 1;
+  }
+
+  .idea-card.gold-accent::before {
+    background: linear-gradient(90deg, transparent, #c9a84c, transparent);
+  }
+
+  .idea-card.violet-accent::before {
+    background: linear-gradient(90deg, transparent, #7b5ea7, transparent);
+  }
+
+  .idea-card.teal-accent::before {
+    background: linear-gradient(90deg, transparent, #3db8a8, transparent);
+  }
+
+  .idea-card.rose-accent::before {
+    background: linear-gradient(90deg, transparent, #c25f6e, transparent);
+  }
+
+  .idea-header {
+    padding: 20px 22px 14px;
+    border-bottom: 1px solid #161625;
+  }
+
+  .idea-number {
+    font-family: var(--font-cinzel), serif;
+    font-size: 9px;
+    letter-spacing: 0.25em;
+    color: #2e2c38;
+    margin-bottom: 4px;
+  }
+
+  .idea-name {
+    font-family: var(--font-cinzel), serif;
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    color: #ede9e0;
+    margin-bottom: 5px;
+  }
+
+  .idea-desc {
+    font-family: var(--font-garamond), serif;
+    font-style: italic;
+    font-size: 13px;
+    color: #8a8690;
+    line-height: 1.55;
+  }
+
+  .idea-where {
+    display: inline-block;
+    margin-top: 8px;
+    font-family: var(--font-inconsolata), monospace;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    padding: 2px 8px;
+    border: 1px solid #161625;
+    color: #2e2c38;
+  }
+
+  /* ── Buttons ── */
+  .btn-gold {
+    position: relative;
+    padding: 11px 36px;
+    border: 1px solid #c9a84c;
+    background: transparent;
+    color: #c9a84c;
+    font-family: var(--font-cinzel), serif;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    overflow: hidden;
+    transition: box-shadow 0.3s;
+    white-space: nowrap;
+  }
+
+  .btn-gold::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(201, 168, 76, 0.1), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.5s;
+    z-index: 0;
+  }
+
+  .btn-gold:hover::before {
+    transform: translateX(100%);
+  }
+
+  .btn-gold:hover {
+    box-shadow: 0 0 24px rgba(201, 168, 76, 0.2);
+  }
+
+  .btn-gold span {
+    position: relative;
+    z-index: 1;
+  }
+
+  .btn-gold:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  .btn-ghost {
+    position: relative;
+    padding: 11px 36px;
+    border: 1px solid #22223a;
+    background: transparent;
+    color: #8a8690;
+    font-family: var(--font-cinzel), serif;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: border-color 0.3s, color 0.3s;
+    white-space: nowrap;
+  }
+
+  .btn-ghost:hover {
+    border-color: rgba(201, 168, 76, 0.4);
+    color: #ede9e0;
+  }
+
+  .btn-ghost span {
+    position: relative;
+    z-index: 1;
+  }
+
+  .btn-ghost:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  .btn-record {
+    position: relative;
+    padding: 11px 36px;
+    border: 1px solid #c9a84c;
+    background: transparent;
+    color: #c9a84c;
+    font-family: var(--font-cinzel), serif;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: border-color 0.3s, color 0.3s, box-shadow 0.3s;
+    white-space: nowrap;
+  }
+
+  .btn-record.is-recording {
+    border-color: #c25f6e;
+    color: #c25f6e;
+    animation: recordPulse 1.5s ease-in-out infinite;
+  }
+
+  .btn-record:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  .btn-record span {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── Symbol tooltip cell ── */
+  .sym-cell {
+    width: 44px;
+    height: 44px;
+    border: 1px solid #22223a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-inconsolata), monospace;
+    font-size: 20px;
+    color: #c9a84c;
+    position: relative;
+    cursor: default;
+    transition: border-color 0.2s;
+  }
+
+  .sym-cell:hover {
+    border-color: #c9a84c;
+  }
+
+  .sym-tip {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: #161625;
+    border: 1px solid #22223a;
+    padding: 4px 10px;
+    white-space: nowrap;
+    font-family: var(--font-inconsolata), monospace;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    color: #8a8690;
+    opacity: 0;
+    transition: opacity 0.2s;
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  .sym-cell:hover .sym-tip {
+    opacity: 1;
+  }
+
+  /* ── Split panel ── */
+  .split-left {
+    background: #0a0a12;
+    border-right: 1px solid #161625;
+  }
+
+  .split-right {
+    background: #05050a;
+  }
+
+  .transcript-line {
+    font-family: var(--font-garamond), serif;
+    font-size: 12px;
+    color: #8a8690;
+    padding: 4px 0;
+    border-bottom: 1px solid #161625;
+  }
+
+  .transcript-line.live {
+    color: #ede9e0;
+    border-bottom-color: #c9a84c;
+  }
+
+  /* ── Ticker ── */
+  .ticker-wrap {
+    width: 100%;
+    overflow: hidden;
+    border-top: 1px solid #161625;
+    border-bottom: 1px solid #161625;
+    padding: 8px 0;
+  }
+
+  .ticker-track {
+    display: flex;
+    gap: 32px;
+    white-space: nowrap;
+    will-change: transform;
+    animation: ticker 28s linear infinite;
+  }
+
+  .ticker-item {
+    font-family: var(--font-inconsolata), monospace;
+    font-size: 11px;
+    color: #2e2c38;
+    letter-spacing: 0.2em;
+  }
+
+  .ticker-sym {
+    color: #c9a84c;
+    margin-right: 8px;
+  }
+
+  /* ── Ideas grid ── */
+  .ideas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 1px;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 1px 1px;
+  }
+
+  /* ── Glass card ── */
+  .glass-card {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+}
+
+/* ─────────────────────────────────────────
+   KEYFRAMES  (outside @layer so they're always included)
+───────────────────────────────────────── */
+@keyframes ticker {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@keyframes recordPulse {
+
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(194, 95, 110, 0);
+  }
+
+  50% {
+    box-shadow: 0 0 20px 4px rgba(194, 95, 110, 0.28);
+  }
 }
