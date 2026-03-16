@@ -238,7 +238,8 @@ function graphReconstruct(tokens: ResolvedToken[]): { sentence: string; confiden
     }
 
     if (action) {
-        parts.push(conjugate(action.word!, subject?.word ?? undefined))
+        const subjectWord = subject?.word ?? undefined
+        parts.push(conjugate(action.word!, subjectWord))
         conf.push(0.88)
     }
 
