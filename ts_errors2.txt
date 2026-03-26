@@ -1,4 +1,0 @@
-src/app/api/speak/route.ts(241,44): error TS2345: Argument of type 'string | null' is not assignable to parameter of type 'string | undefined'.
-  Type 'null' is not assignable to type 'string | undefined'.
-src/lib/assign-ids.ts(10,36): error TS2307: Cannot find module '../src/lib/vocabulary' or its corresponding type declarations.
-src/lib/seed-vocabulary.ts(10,46): error TS2307: Cannot find module '../src/lib/vocabulary' or its corresponding type declarations.
